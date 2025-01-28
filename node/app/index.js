@@ -1,12 +1,8 @@
-import { Sequelize,DataTypes } from "sequelize";
+const db = require('./tabelle/Associazioni')
 
-const sequelize = new Sequelize("aeroporti","root","cisco",{
-    host: "mysql",
-    dialect: "mysql"
-});
 
-sequelize.authenticate().then(() =>{
+db.sequelize.authenticate().then(() =>{
     console.log("connessione con il database stabilita")
-}).catch(()=>{
-    console.log("errore nella connessione con il database")
+}).catch((err)=>{
+    console.log("errore nella connessione con il database",err)
 })
