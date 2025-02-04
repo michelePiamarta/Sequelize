@@ -6,3 +6,9 @@ db.sequelize.authenticate().then(() =>{
 }).catch((err)=>{
     console.log("errore nella connessione con il database",err)
 })
+
+db.sequelize.sync().then(()=>{
+    console.log("tabelle sincronizzate con successo");
+}).catch((err)=>{
+    console.log("errore nella sincronizzazione delle tabelle", err);
+})

@@ -21,7 +21,8 @@ Aeroporto.init({
 },{
     sequelize,
     modelName: 'Aeroporti',
-    tableName: 'Aeroporti'
+    tableName: 'Aeroporti',
+    timestamps: false
 })
 
 module.exports = Aeroporto;
