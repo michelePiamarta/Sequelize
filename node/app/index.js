@@ -77,14 +77,11 @@ app.post('/volo', async (req, res) => {
     }
 })
 //mostrare tutti i voli in partenza oggi
-app.get('/voli/:ora', async (req, res) => {
-    const ora = req.params.ora
+app.get('/voli/:data', async (req, res) => {
+    const data = req.params.data
     res.json(await db.tabelle.Volo.findAll({
-        where: {
-            orariopartenza: {
-                [Op.eq]: ora
-            }
-        }
+        where: db.sequelize.where(db.sequelize.fn("day", db.sequelize.col("orariopartenza")),{[Op.eq]:data})
+        
     }));
 })
 
