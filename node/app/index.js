@@ -1,7 +1,7 @@
 const db = require('./tabelle/Associazioni')
 const express = require('express')
-
 const app = express();
+app.use(express.json())
 
 db.sequelize.authenticate().then(() => {
     console.log("connessione con il database stabilita")
@@ -15,13 +15,67 @@ db.sequelize.sync().then(() => {
     console.log("errore nella sincronizzazione delle tabelle", err);
 })
 
-app.get('/fittizi', async (req, res) => {
-    await db.tabelle.Categoria.create({ nome: "Internazionale" });
-    await db.tabelle.Regione.create({ nome: "Veneto" });
-    await db.tabelle.Citta.create({ nome: "Domegliara", numeroabitanti: 1, fkregione: 1 });
-    await db.tabelle.Aeroporto.create({ codice: 1, nome: 'prenos', fkcategoria: 1, fkcitta: 1 });
-    res.json({ message: 'avi' });
+app.post('/categoria', async (req,res) => {
+    try{
+        await db.tabelle.Categoria.create({ nome: req.body.nome })
+        res.status(200).json({message: "creata categoria"})
+    }
+    catch(err){
+        res.status(500).json({message: "errore nella creazione categoria",error: err})
+    }
 })
+
+app.post('/regione', async (req,res) => {
+    try{
+        await db.tabelle.Regione.create({ nome: req.body.nome })
+        res.status(200).json({ message: "creata regione"})
+    }
+    catch(err){
+        res.status(500).json({message: "errore nella creazione regione",error: err})
+    }
+})
+
+app.post('/citta', async (req,res) => {
+    try{
+        await db.tabelle.Citta.create({ 
+            nome: req.body.nome,
+            numeroabitanti: req.body.numeroabitanti, 
+            fkregione: req.body.fkregione
+        })
+        res.status(200).json({ message: "creata citta"})
+    }catch(err){
+        res.status(500).json({message: "errore nella creazione citta",error: err})
+    }
+})
+
+app.post('/aeroporto', async (req,res) => {
+    try{
+        await db.tabelle.Aeroporto.create({
+            codice: req.body.codice, 
+            nome: req.body.nome, 
+            fkcategoria: req.body.fkcategoria, 
+            fkcitta: req.body.fkcitta
+        })
+        res.status(200).json({ message: "creato aeroporto"})
+    }catch(err){
+        res.status(500).json({message: "errore nella creazione aeroporto",error: err})
+    }
+})
+
+app.post('/volo', async (req,res) => {
+    try{
+        await db.tabelle.Volo.create({
+            orariopartenza: req.body.orariopartenza,
+            durataminuti: req.body.durataminuti,
+            fkaeroportopartenza: req.body.fkaeroportopartenza,
+            fkaeroportoarrivo: req.body.fkaeroportoarrivo
+        })
+        res.status(200).json({message: "creato volo"})
+    }catch(err){
+        res.status(500).json({message: "errore nella creazione volo",error: err})
+    }
+})
+
 app.get('/aeroporti', async (req, res) => {
     res.json(await db.tabelle.Aeroporto.findAll());
 })

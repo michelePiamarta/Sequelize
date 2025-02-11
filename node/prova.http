@@ -1,0 +1,4 @@
+post https://super-guacamole-pvj9x74jg7ghrj9x-3000.app.github.dev/categoria HTTP/1.1
+Content-Type: application/json
+
+{ "nome": "in" }
