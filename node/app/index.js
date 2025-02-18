@@ -80,13 +80,31 @@ app.post('/volo', async (req, res) => {
 app.get('/voli/:data', async (req, res) => {
     const data = req.params.data
     res.json(await db.tabelle.Volo.findAll({
-        where: db.sequelize.where(db.sequelize.fn("day", db.sequelize.col("orariopartenza")),{[Op.eq]:data})
-        
+        where: db.sequelize.where(db.sequelize.fn("day", db.sequelize.col("orariopartenza")), { [Op.eq]: data })
+
     }));
 })
 
+app.get("/citta/:idCitta", async (req, res) => {
+    try {
+        const idCitta = req.params.idCitta
+        res.json(await getVoliPerCitta(idCitta))
+    } catch (error) {
 
+    }
+})
 
+async function getVoliPerCitta(idCitta) {
+    return await db.tabelle.Volo.findAll({
+        include: {
+            model: db.tabelle.Aeroporto,
+            as:'arrivo',
+            where: { fkcitta: idCitta },
+            attributes:[]
+        }
+    })
+   
+}
 
 app.listen(3000, () => {
     console.log("applicazione in ascolto sulla porta 3000");
